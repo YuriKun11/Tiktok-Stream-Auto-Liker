@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TikTok Auto Liker</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      width: 280px;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #111;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: stretch;
+    }
+    h2 {
+      font-size: 1.4em;
+      text-align: center;
+      color: #fe2c55;
+      margin: 0;
+    }
+    button {
+      background-color: #fe2c55;
+      color: #fff;
+      border: none;
+      padding: 12px 0;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    button:hover {
+      background-color: #e5264b;
+      transform: translateY(-1px);
+    }
+    button:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    #status {
+      font-size: 0.95em;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f2f3f5;
+      color: #333;
+    }
+    .status-active {
+      color: #198754;
+      background-color: #e6f4ea;
+    }
+    .status-inactive {
+      color: #dc3545;
+      background-color: #fcebea;
+    }
+    .status-warning {
+      color: #ffc107;
+      background-color: #fff8e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>TikTok Auto Liker</h2>
+    <button id="toggleButton">Start Auto Liking</button>
+    <div id="status">Status: Loading...</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
