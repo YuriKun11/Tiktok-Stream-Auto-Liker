@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "TikTok Auto Liker",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Automatically likes TikTok live streams with a custom interval and duration.",
     "permissions": [
         "activeTab",
