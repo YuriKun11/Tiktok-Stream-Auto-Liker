@@ -6,42 +6,43 @@ let pauseTimeoutId = null;
  * @returns {HTMLElement|null} 
  */
 function findLikeButton() {
-    let likeButton = document.querySelector('div.tiktok-1cu4ad.e1tv929b3');
-    if (likeButton) {
-        console.log("Found like button via specific div class names: .tiktok-1cu4ad.e1tv929b3");
-        return likeButton;
+    const newLikeButtons = document.querySelectorAll(
+        'div.cursor-pointer svg path'
+    );
+
+    for (const path of newLikeButtons) {
+        const d = path.getAttribute("d");
+        if (d && d.startsWith("M24 9.44c3.2-4.03")) {
+            console.log("Found like button via new TikTok UI heart SVG path.");
+            return path.closest("div.cursor-pointer");
+        }
     }
+
     const potentialLikeButtons = document.querySelectorAll(
         'div[role="button"][aria-label*="Like" i]:has(svg)'
     );
 
     for (const btn of potentialLikeButtons) {
-       
-        const svgContent = btn.innerHTML;
-        if (
-            svgContent.includes('heart') ||
-            svgContent.includes('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z') || // Common heart SVG path
-            svgContent.includes('path d="M12 20.35l-1.45-1.32C5.4 14.36 2 11.28 2 7.5 2 4.42 4.42 2 7.5 2c1.74 0 3.41.81 4.5 2.09C13.09 2.81 14.76 2 16.5 2 19.58 2 22 4.42 22 7.5c0 3.78-3.4 6.86-8.55 11.54L12 20.35z"') // Another common heart SVG path variation
-        ) {
-            console.log("Found like button via aria-label and verified SVG heart content (fallback).");
-            return btn;
+        const svgs = btn.querySelectorAll("svg path");
+        for (const path of svgs) {
+            const d = path.getAttribute("d");
+            if (d && (d.includes("M12 21.35") || d.includes("M12 20.35"))) {
+                console.log("Found like button via aria-label + SVG heart fallback.");
+                return btn;
+            }
+        }
+    }
+    
+    const genericDivs = document.querySelectorAll('div.cursor-pointer svg path');
+    for (const path of genericDivs) {
+        const d = path.getAttribute("d");
+        if (d && (d.includes("M12 21.35") || d.includes("M12 20.35"))) {
+            console.log("Found like button via generic SVG path fallback.");
+            return path.closest("div.cursor-pointer");
         }
     }
 
-    const genericDivsWithSvg = document.querySelectorAll('div[role="button"]:has(svg)');
-    for (const btn of genericDivsWithSvg) {
-        const svgContent = btn.innerHTML;
-        if (
-            svgContent.includes('heart') ||
-            svgContent.includes('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z') ||
-            svgContent.includes('path d="M12 20.35l-1.45-1.32C5.4 14.36 2 11.28 2 7.5 2 4.42 4.42 2 7.5 2c1.74 0 3.41.81 4.5 2.09C13.09 2.81 14.76 2 16.5 2 19.58 2 22 4.42 22 7.5c0 3.78-3.4 6.86-8.55 11.54L12 20.35z"')
-        ) {
-            console.log("Found like button via generic SVG heart pattern (fallback).");
-            return btn;
-        }
-    }
-
-    console.warn("TikTok Auto Liker: Could not find a definitive like button using any known selectors.");
+    console.warn("TikTok Auto Liker: Could not find a like button.");
     return null;
 }
 
@@ -51,7 +52,9 @@ function findLikeButton() {
 function clickLikeButton() {
     const likeButton = findLikeButton();
     if (likeButton) {
-        likeButton.click();
+        // Use safer event dispatching
+        const event = new MouseEvent("click", { bubbles: true, cancelable: true, view: window });
+        likeButton.dispatchEvent(event);
         return true;
     } else {
         return false;
@@ -59,14 +62,13 @@ function clickLikeButton() {
 }
 
 function startLikingLoop() {
-    
     if (!isLikingActive) {
         console.log("TikTok Auto Liker: Liking loop stopped externally.");
         return;
     }
 
     console.log("TikTok Auto Liker: Starting a liking burst.");
-    //DURATION
+    // DURATION SETTINGS
     const LIKING_DURATION_SECONDS = 5; 
     const CLICK_INTERVAL_MS = 40; 
 
@@ -83,13 +85,11 @@ function startLikingLoop() {
                 clicksMadeInBurst++;
             }
         } else {
-            
             clearInterval(clickIntervalId); 
             clickIntervalId = null;
 
             if (isLikingActive) {
                 const PAUSE_DURATION_SECONDS = 5; 
-
                 console.log(`TikTok Auto Liker: ${LIKING_DURATION_SECONDS}-second burst finished. Pausing for ${PAUSE_DURATION_SECONDS} seconds.`);
 
                 if (pauseTimeoutId) {
