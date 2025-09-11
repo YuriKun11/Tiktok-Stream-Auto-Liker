@@ -12,4 +12,7 @@ By using multiple accounts and browser tabs, you can quickly achieve 100k heart 
 
 ## Screenshot
 <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/116e43d2-5bad-4558-8135-5b56e7a2232a" />
+<img width="1599" height="899" alt="image" src="https://github.com/user-attachments/assets/13793d84-cfbd-4760-9762-35819567c3b3" />
+
+
 
